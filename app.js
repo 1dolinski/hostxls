@@ -1,24 +1,46 @@
-var express = require("express");
+var express = require('express');
 var app = express();
 
 var redis = require("redis");
 	client = redis.createClient();
 
+
+
+
+
+
+// redis basic works
 client.on("error", function (err) {
 	console.log("Error " + err);
 });
 
-client.set("string key", "string val", redis.print);
-client.hset("hash key", "hashtest 1", "some value", redis.print);
-client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-client.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    client.quit();
-});
 
+
+app.use(express.static(__dirname + '/public'));
+
+// load basic template
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/public/views/index.html');
+})
+
+
+// test set redis
+app.get('/set/:hashkey/:key/:value', function (req, res) {
+	client.hset(req.params["hashkey"], req.params["key"], req.params["value"], redis.print);
+	res.send("Submitted:");
+})
+
+// test get 
+app.get('/get/:hashkey', function (req, res) {
+	client.hgetall(req.params["hashkey"], function( err, obj ) {
+		console.log(obj);
+	  res.send(obj);
+	})
+})
+
+
+
+// run server
 var server = app.listen(3000, function () {
 
   var host = server.address().address
