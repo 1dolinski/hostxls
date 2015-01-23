@@ -7,18 +7,15 @@ var redis = require("redis");
 // var r = require("redis").createClient(config.redisPort,config.redisHost);
 
 // development
-if (app.get('env') === "production") {
-	console.log(app.get('env'));
-	console.log("CONSDFODSFOINDSFSDNFSDJKLFDNSJFHSDKJFHSDFKJHFKJHSKJHKJSDHFKSDHFKJSDBHFKJSBDFL");
-// production
+
 var url = require('url');
-var redisURL = url.parse(process.env.REDISCLOUD_URL);
+var redisURL = url.parse(process.env.REDISCLOUD_URL || "redis://localhost:6379/");
 var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 client.auth(redisURL.auth.split(":")[1]);
 
-} else {
-	var client = redis.createClient();
-};
+// } else {
+// 	var client = redis.createClient();
+// };
 
 
 
