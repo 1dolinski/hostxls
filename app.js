@@ -8,6 +8,8 @@ var redis = require("redis");
 
 // development
 if (app.get('env') === "production") {
+	console.log(app.get('env'));
+	console.log("CONSDFODSFOINDSFSDNFSDJKLFDNSJFHSDKJFHSDFKJHFKJHSKJHKJSDHFKSDHFKJSDBHFKJSBDFL");
 // production
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL);
