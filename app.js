@@ -1,8 +1,25 @@
 var express = require('express');
 var app = express();
-
 var redis = require("redis");
-client = redis.createClient();
+
+// var config = require('./config.json')[app.get('env')];
+// app.use(express.errorHandler(config.errorHandlerOptions));
+// var r = require("redis").createClient(config.redisPort,config.redisHost);
+
+// development
+if (app.get('env') === "production") {
+// production
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+client.auth(redisURL.auth.split(":")[1]);
+
+} else {
+	var client = redis.createClient();
+};
+
+
+
 
 // redis basic works
 client.on("error", function(err) {
@@ -31,7 +48,7 @@ app.get('/get/:hashkey', function(req, res) {
 })
 
 // run server
-var server = app.listen(3000, function() {
+var server = app.listen(process.env.PORT || 3000, function() {
 
     var host = server.address().address
     var port = server.address().port
